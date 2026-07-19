@@ -7,6 +7,7 @@ A responsive static portfolio built from Jose Adrian Suriaga's resume. It has no
 ```text
 .
 ├── index.html
+├── vercel.json
 ├── assets
 │   ├── css
 │   │   └── styles.css
@@ -26,6 +27,12 @@ python -m http.server 8000
 ```
 
 Then visit `http://localhost:8000`.
+
+## Deploying to Vercel
+
+Import the repository and keep the Vercel **Root Directory** set to the repository root. The checked-in `vercel.json` marks this as a framework-free static site, disables the build step, and serves files directly from the repository root.
+
+Every push to the connected production branch will create a new deployment. No install command, environment variables, or output-folder override is required.
 
 ## Updating content
 
