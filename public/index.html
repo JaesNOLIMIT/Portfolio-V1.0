@@ -229,13 +229,31 @@
     font-weight:800;
     letter-spacing:-.035em;
     line-height:1.05;
-    margin:0 0 24px;
+    margin:0 0 14px;
     overflow-wrap:break-word;
   }
 
+  .tagline{
+    min-height:1.6em;
+    color:var(--muted);
+    font-size:16px;
+  }
+
+  .cursor{
+    display:inline-block;
+    width:8px;
+    height:1em;
+    margin-left:2px;
+    vertical-align:-2px;
+    background:var(--accent);
+    animation:blink 1s steps(1) infinite;
+  }
+
+  @keyframes blink{50%{opacity:0;}}
+
   .summary{
     max-width:720px;
-    margin-top:0;
+    margin-top:28px;
     color:var(--muted);
     font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size:16px;
@@ -654,6 +672,7 @@
 
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
+    .cursor{animation:none;}
     .menu-toggle span,
     .sidebar-panel{transition:none;}
   }
@@ -697,6 +716,7 @@
     <img class="avatar" src="assets/images/profile.jpg" alt="Portrait of Jose Adrian Suriaga" width="360" height="360">
     <div class="hero-copy">
       <h1 class="name">Jose Adrian Suriaga</h1>
+      <div class="tagline" id="tagline"><span id="tagline-text"></span><span class="cursor"></span></div>
 
       <div class="summary">
         <p>I build web and mobile apps that work as good as they look — front to back. Clean code, real solutions, zero shortcuts. I don't just ship features, I ship results that help businesses grow.</p>
@@ -942,6 +962,25 @@
 </dialog>
 
 <script>
+  const tagline = 'Full-stack developer · Web · Mobile';
+  const taglineText = document.getElementById('tagline-text');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (taglineText) {
+    if (reducedMotion) {
+      taglineText.textContent = tagline;
+    } else {
+      let taglineIndex = 0;
+      (function typeTagline() {
+        if (taglineIndex <= tagline.length) {
+          taglineText.textContent = tagline.slice(0, taglineIndex);
+          taglineIndex += 1;
+          window.setTimeout(typeTagline, 28);
+        }
+      })();
+    }
+  }
+
   const navLinks = document.querySelectorAll('.side-nav a');
   const sidebar = document.querySelector('[data-sidebar]');
   const menuToggle = document.querySelector('[data-menu-toggle]');
