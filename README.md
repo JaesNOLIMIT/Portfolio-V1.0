@@ -1,42 +1,49 @@
 # Jose Adrian Suriaga — Portfolio
 
-A responsive static portfolio built from Jose Adrian Suriaga's resume. It has no build step or framework dependency, so it can be deployed directly to GitHub Pages, Netlify, Vercel, or any static web host.
+A responsive static portfolio built from Jose Adrian Suriaga's resume. It has no framework, dependency installation, or build step.
 
 ## Project structure
 
 ```text
 .
-├── index.html
+├── public
+│   ├── index.html
+│   └── assets
+│       ├── documents
+│       │   └── jose-adrian-suriaga-resume.pdf
+│       └── images
+│           └── profile.jpg
 ├── vercel.json
-├── assets
-│   ├── css
-│   │   └── styles.css
-│   ├── documents
-│   │   └── jose-adrian-suriaga-resume.pdf
-│   └── js
-│       └── main.js
 └── README.md
 ```
 
 ## Preview locally
 
-Open `index.html` directly, or run a simple local server from this folder:
+Run a simple local server from the repository root:
 
 ```powershell
-python -m http.server 8000
+python -m http.server 8000 --directory public
 ```
 
 Then visit `http://localhost:8000`.
 
 ## Deploying to Vercel
 
-Import the repository and keep the Vercel **Root Directory** set to the repository root. The checked-in `vercel.json` marks this as a framework-free static site, disables the build step, and serves files directly from the repository root.
+Import the repository and keep the Vercel **Root Directory** set to the repository root. The checked-in `vercel.json` marks this as a framework-free static site, disables the build step, and serves only the contents of `public/`.
 
-Every push to the connected production branch will create a new deployment. No install command, environment variables, or output-folder override is required.
+Use the following Vercel project settings:
+
+- Framework Preset: **Other**
+- Root Directory: blank (repository root)
+- Build Command: blank
+- Output Directory: `public`
+- Install Command: blank
+- Production Branch: `main`
+
+Every push to `main` should create a deployment. No environment variables are required.
 
 ## Updating content
 
-- Page content and links: `index.html`
-- Colors, layout, and responsive styling: `assets/css/styles.css`
-- Menu, sticky-header state, and active-section highlighting: `assets/js/main.js`
-- Downloadable resume: `assets/documents/jose-adrian-suriaga-resume.pdf`
+- Page content, inline styles, and interactions: `public/index.html`
+- Profile picture and favicon: `public/assets/images/profile.jpg`
+- Downloadable resume: `public/assets/documents/jose-adrian-suriaga-resume.pdf`
