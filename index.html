@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portfolio of Jose Adrian Suriaga, a full-stack developer building practical web, mobile, and backend systems.">
 <title>Jose Adrian Suriaga</title>
+<link rel="icon" type="image/jpeg" href="ProfilePicture_JoseAdrianSuriaga.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,6 +27,7 @@
 
   body{
     margin:0;
+    overflow-x:hidden;
     background:var(--bg);
     color:var(--text);
     font-family:'JetBrains Mono', monospace;
@@ -55,22 +58,22 @@
   .wrap{
     position:relative;
     z-index:1;
-    max-width:1040px;
+    max-width:1480px;
     margin:0 auto;
-    padding:72px 24px 120px;
+    padding:64px 32px 140px;
   }
 
   .layout{
     display:flex;
     align-items:flex-start;
-    gap:64px;
+    gap:88px;
   }
 
   /* ---- sidebar ---- */
 
   .sidebar{
     flex:none;
-    width:200px;
+    width:220px;
     position:sticky;
     top:56px;
     display:flex;
@@ -146,7 +149,7 @@
     display:flex;
     align-items:center;
     gap:10px;
-    margin-bottom:36px;
+    margin-bottom:42px;
   }
 
   .eyebrow .dot{
@@ -158,38 +161,52 @@
   /* ---- hero ---- */
 
   .hero{
-    display:flex;
-    align-items:flex-start;
-    gap:22px;
-    margin-bottom:40px;
+    display:grid;
+    grid-template-columns:minmax(280px, 360px) minmax(0, 1fr);
+    align-items:center;
+    gap:clamp(48px, 6vw, 88px);
+    margin-bottom:56px;
   }
 
   .avatar{
-    flex:none;
-    width:64px;height:64px;
+    display:block;
+    width:100%;
+    height:auto;
+    aspect-ratio:1;
     border:1px solid var(--border);
-    border-radius:6px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:700;
-    font-size:20px;
-    color:var(--accent);
+    border-radius:8px;
+    object-fit:cover;
     background:var(--panel);
   }
 
+  .hero-copy{min-width:0;}
+
   .name{
-    font-size:32px;
+    font-size:clamp(38px, 4vw, 58px);
     font-weight:800;
-    letter-spacing:-.01em;
-    margin:0 0 8px;
+    letter-spacing:-.035em;
+    line-height:1.05;
+    margin:0 0 14px;
+    overflow-wrap:break-word;
   }
 
   .tagline{
     color:var(--muted);
-    font-size:15px;
+    font-size:16px;
     min-height:1.6em;
   }
+
+  .summary{
+    max-width:720px;
+    margin-top:28px;
+    color:var(--muted);
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size:16px;
+    line-height:1.7;
+  }
+
+  .summary p{margin:0 0 16px;}
+  .summary p:last-child{margin-bottom:0;}
 
   .cursor{
     display:inline-block;
@@ -205,8 +222,8 @@
   .links{
     display:flex;
     flex-wrap:wrap;
-    gap:18px;
-    margin:22px 0 0;
+    gap:20px;
+    margin:28px 0 0;
     font-size:13px;
   }
 
@@ -229,12 +246,13 @@
     grid-template-columns:repeat(4,1fr);
     border-top:1px dashed var(--border);
     border-bottom:1px dashed var(--border);
-    margin:44px 0 64px;
-    padding:22px 0;
+    margin:0 0 96px;
+    padding:26px 0;
   }
 
   .stat{
-    padding:0 14px;
+    min-width:0;
+    padding:0 22px;
     border-left:1px solid var(--border);
   }
   .stat:first-child{border-left:none;padding-left:0;}
@@ -254,14 +272,14 @@
 
   /* ---- sections ---- */
 
-  section{margin-bottom:64px;}
+  section{margin-bottom:96px;}
 
   .section-label{
     font-size:12px;
     letter-spacing:.14em;
     text-transform:uppercase;
     color:var(--muted-2);
-    margin-bottom:22px;
+    margin-bottom:28px;
     display:flex;
     align-items:center;
     gap:12px;
@@ -283,8 +301,8 @@
     border:1px solid var(--border);
     background:var(--panel);
     border-radius:8px;
-    padding:20px 22px;
-    margin-bottom:14px;
+    padding:28px 30px;
+    margin-bottom:18px;
     transition:border-color .15s;
   }
   .project:hover{border-color:var(--accent);}
@@ -298,7 +316,7 @@
 
   .project-name{
     font-weight:700;
-    font-size:15px;
+    font-size:16px;
   }
 
   .project-link{
@@ -310,9 +328,10 @@
   .project-link:hover{color:var(--accent);}
 
   .project-desc{
+    max-width:940px;
     color:var(--muted);
-    font-size:13.5px;
-    margin:10px 0 14px;
+    font-size:14.5px;
+    margin:12px 0 18px;
   }
 
   .tags{display:flex;flex-wrap:wrap;gap:8px;}
@@ -337,7 +356,7 @@
     display:grid;
     grid-template-columns:64px 1fr;
     gap:18px;
-    padding:16px 0;
+    padding:24px 0;
     border-bottom:1px solid var(--border);
   }
   .exp-row:last-child{border-bottom:none;}
@@ -377,11 +396,19 @@
 
   /* footer */
 
+  @media (max-width:1100px){
+    .wrap{padding-inline:26px;}
+    .layout{gap:48px;}
+    .sidebar{width:190px;}
+    .hero{grid-template-columns:minmax(240px, 300px) minmax(0, 1fr);gap:40px;}
+  }
+
   @media (max-width:860px){
     .layout{flex-direction:column; gap:36px;}
     .sidebar{
       position:static;
       width:100%;
+      min-width:0;
       flex-direction:row;
       flex-wrap:wrap;
       align-items:center;
@@ -394,12 +421,40 @@
       padding-top:0;
       width:100%;
     }
+    .main{width:100%;}
+  }
+
+  @media (max-width:700px){
+    .wrap{padding:42px 20px 100px;}
+    .hero{grid-template-columns:1fr;gap:34px;}
+    .avatar{max-width:360px;}
+    .name{font-size:38px;}
+    .stats{margin-bottom:76px;}
+    section{margin-bottom:76px;}
   }
 
   @media (max-width:600px){
+    .sidebar{
+      display:grid;
+      grid-template-columns:1fr;
+      align-items:start;
+      gap:22px;
+    }
+    .side-nav{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      width:100%;
+      gap:4px 12px;
+    }
+    .side-footer{min-width:0;}
+    .side-footer a{display:block;max-width:100%;overflow-wrap:anywhere;}
+    .name{font-size:34px;}
     .stats{grid-template-columns:repeat(2,1fr);row-gap:20px;}
-    .stat:nth-child(3){border-left:none;}
+    .stat{padding:0 14px;}
+    .stat:nth-child(3){border-left:none;padding-left:0;}
     .exp-row{grid-template-columns:1fr;}
+    .project{padding:22px 20px;}
+    .project-top{flex-direction:column;align-items:flex-start;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -435,17 +490,23 @@
 
   <!-- HERO -->
   <div class="hero">
-    <img class="avatar" src="ProfilePicture_JoseAdrianSuriaga.jpg" alt="Portrait of Jose Adrian Suriaga" width="64" height="64">
-    <div>
+    <img class="avatar" src="ProfilePicture_JoseAdrianSuriaga.jpg" alt="Portrait of Jose Adrian Suriaga" width="360" height="360">
+    <div class="hero-copy">
       <h1 class="name">Jose Adrian Suriaga</h1>
       <div class="tagline" id="tagline"><span id="tagline-text"></span><span class="cursor"></span></div>
-    </div>
-  </div>
 
-  <div class="links">
-    <a href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
-    <a href="https://www.linkedin.com/in/jose-adrian-suriaga-961773423" target="_blank" rel="noopener">linkedin ↗</a>
-    <a href="mailto:adriansuriaga.dev@gmail.com">email</a>
+      <div class="summary">
+        <p>Full-stack developer with experience building web and mobile apps, from user interface to backend systems. I focus on writing clean code and building tools that help a business run better and grow.</p>
+        <p>I stay committed to every project, from the first plan to the final launch. I enjoy learning new tools and applying them to solve real, practical problems.</p>
+      </div>
+
+      <div class="links">
+        <a href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
+        <a href="https://www.linkedin.com/in/jose-adrian-suriaga-961773423" target="_blank" rel="noopener">linkedin ↗</a>
+        <a href="https://www.instagram.com/adriansuriaga" target="_blank" rel="noopener">instagram ↗</a>
+        <a href="mailto:adriansuriaga.dev@gmail.com">email</a>
+      </div>
+    </div>
   </div>
 
   <!-- STATS -->
@@ -455,15 +516,15 @@
       <div class="label">Expected graduation</div>
     </div>
     <div class="stat">
-      <div class="num">Full-Stack</div>
-      <div class="label">Development focus</div>
+      <div class="num">Open</div>
+      <div class="label">Internships / work</div>
     </div>
     <div class="stat">
-      <div class="num">03</div>
-      <div class="label">Client systems</div>
+      <div class="num">08</div>
+      <div class="label">Project areas</div>
     </div>
     <div class="stat">
-      <div class="num">Angat, PH</div>
+      <div class="num">PH</div>
       <div class="label">Location</div>
     </div>
   </div>
@@ -490,10 +551,36 @@
 
     <div class="project">
       <div class="project-top">
+        <div class="project-name">Angat Trading Retail &amp; POS System</div>
+        <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="project-desc">Custom point-of-sale and retail management system built for a motorcycle equipment store, including a barter trading module for accurate and fair item-to-item exchanges.</div>
+      <div class="tags">
+        <span class="tag">Point of Sale</span>
+        <span class="tag">Retail Management</span>
+        <span class="tag">Barter Trading</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <div class="project-name">EECM Church Management System</div>
+        <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="project-desc">Centralized administrative operations, data tracking, and internal communication between E-Elyon Church's main location and its multiple branches.</div>
+      <div class="tags">
+        <span class="tag">Centralized Records</span>
+        <span class="tag">Branch Coordination</span>
+        <span class="tag">Internal Communication</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
         <div class="project-name">FixItLocal</div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
       </div>
-      <div class="project-desc">Infrastructure reporting website for eight local colleges, with photo uploads and precise interactive map pinning for maintenance hazards.</div>
+      <div class="project-desc">Infrastructure reporting website for eight local colleges, with photo uploads and precise interactive map pinning so officials can track and resolve maintenance hazards.</div>
       <div class="tags">
         <span class="tag">Full-Stack</span>
         <span class="tag">Photo Uploads</span>
@@ -506,11 +593,50 @@
         <div class="project-name">FlavorFlow</div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
       </div>
-      <div class="project-desc">Culinary management hub with community inspiration, personal recipe storage, a weekly planner, and a dynamically generated smart grocery list.</div>
+      <div class="project-desc">Centralized culinary hub with community inspiration, personal recipe storage, a weekly planner, and a smart grocery list with real-time ingredient and shopping progress tracking.</div>
       <div class="tags">
         <span class="tag">Recipe Management</span>
         <span class="tag">Weekly Planner</span>
         <span class="tag">Smart Grocery List</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <div class="project-name">P2P Bus Ticketing &amp; Reservation System</div>
+        <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="project-desc">Backend infrastructure for a real-time point-to-point bus transit platform, with immediate ticket ordering and seat reservation logic designed to prevent double-booking.</div>
+      <div class="tags">
+        <span class="tag">Backend Development</span>
+        <span class="tag">Real-Time Booking</span>
+        <span class="tag">Seat Reservations</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <div class="project-name">Tiny Diver</div>
+        <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="project-desc">A 2D educational ocean-conservation adventure with original level design, asset integration, core mechanics, top-down gameplay, and complex tilemaps.</div>
+      <div class="tags">
+        <span class="tag">Godot Engine</span>
+        <span class="tag">GDScript</span>
+        <span class="tag">Game Development</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <div class="project-name">Technical Mini-Projects</div>
+        <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="project-desc">Practical applications including a point-of-sale system, inventory management tracker, and vending machine simulation, focused on backend architecture, database logic, and clean interfaces.</div>
+      <div class="tags">
+        <span class="tag">POS</span>
+        <span class="tag">Inventory</span>
+        <span class="tag">Backend Logic</span>
       </div>
     </div>
   </section>
@@ -565,11 +691,33 @@
   <section id="stack">
     <div class="section-label"><span class="num">04</span> Stack</div>
     <div class="stack-grid">
-      <span class="tag">React · React Native · Flutter</span>
-      <span class="tag">JavaScript · TypeScript · PHP</span>
-      <span class="tag">Java · Kotlin · Python</span>
-      <span class="tag">MySQL · PostgreSQL · MongoDB</span>
-      <span class="tag">Supabase · Firebase · Godot</span>
+      <span class="tag">React</span>
+      <span class="tag">React Native</span>
+      <span class="tag">Flutter</span>
+      <span class="tag">Dart</span>
+      <span class="tag">JavaScript</span>
+      <span class="tag">TypeScript</span>
+      <span class="tag">UI/UX Design</span>
+      <span class="tag">PHP</span>
+      <span class="tag">Java</span>
+      <span class="tag">Kotlin</span>
+      <span class="tag">Python</span>
+      <span class="tag">MySQL</span>
+      <span class="tag">PostgreSQL</span>
+      <span class="tag">MongoDB</span>
+      <span class="tag">Supabase</span>
+      <span class="tag">Firebase</span>
+      <span class="tag">Local AI Deployment</span>
+      <span class="tag">ChatGPT</span>
+      <span class="tag">Gemini</span>
+      <span class="tag">Claude</span>
+      <span class="tag">GitHub Copilot</span>
+      <span class="tag">Godot Engine</span>
+      <span class="tag">GDScript</span>
+      <span class="tag">VS Code</span>
+      <span class="tag">Git</span>
+      <span class="tag">GitHub</span>
+      <span class="tag">GitHub Desktop</span>
     </div>
   </section>
 
@@ -579,7 +727,7 @@
 </div>
 
 <script>
-  const full = "Full-stack developer building practical web and mobile applications.";
+  const full = "Full-stack developer · Web · Mobile · Backend";
   const el = document.getElementById('tagline-text');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
