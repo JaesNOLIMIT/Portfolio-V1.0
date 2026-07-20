@@ -105,10 +105,15 @@
   }
 
   .brand{
+    color:var(--text);
     font-weight:700;
     font-size:14px;
     letter-spacing:-.01em;
+    text-decoration:none;
+    transition:color .15s;
   }
+
+  .brand:hover{color:var(--accent);}
 
   .menu-toggle{
     display:none;
@@ -127,18 +132,19 @@
     cursor:pointer;
   }
 
-  .menu-toggle span{
-    display:block;
-    width:19px;
-    height:1.5px;
-    border-radius:99px;
-    background:currentColor;
-    transition:transform .2s ease, opacity .2s ease;
+  .menu-icon{
+    width:24px;
+    height:24px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.65;
+    stroke-linecap:round;
+    stroke-linejoin:round;
   }
 
-  .sidebar.is-open .menu-toggle span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-  .sidebar.is-open .menu-toggle span:nth-child(2){opacity:0;}
-  .sidebar.is-open .menu-toggle span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+  .menu-icon-close{display:none;}
+  .sidebar.is-open .menu-icon-burger{display:none;}
+  .sidebar.is-open .menu-icon-close{display:block;}
 
   .sidebar-panel{
     display:flex;
@@ -675,13 +681,30 @@
   }
 
   @media (max-width:860px){
+    .wrap{padding-top:0;}
     .layout{flex-direction:column; gap:36px;}
     .sidebar{
-      position:static;
+      position:fixed;
+      top:0;
+      right:0;
+      left:0;
+      z-index:30;
       width:100%;
+      max-height:100dvh;
       min-width:0;
+      padding:16px 26px;
       display:block;
+      overflow-y:auto;
+      border-bottom:1px solid rgba(31,35,43,.9);
+      background:rgba(10,11,13,.9);
+      box-shadow:0 12px 32px rgba(0,0,0,.16);
+      -webkit-backdrop-filter:blur(14px);
+      backdrop-filter:blur(14px);
+      transform:translateY(0);
+      transition:transform .24s ease;
+      will-change:transform;
     }
+    .sidebar.is-hidden:not(.is-open){transform:translateY(calc(-100% - 2px));pointer-events:none;}
     .menu-toggle{display:flex;}
     .sidebar-panel{
       max-height:0;
@@ -693,8 +716,9 @@
       transition:max-height .25s ease, opacity .2s ease, transform .2s ease, visibility .2s;
     }
     .sidebar.is-open .sidebar-panel{
-      max-height:440px;
+      max-height:calc(100dvh - 75px);
       padding-top:24px;
+      overflow-y:auto;
       visibility:visible;
       opacity:1;
       transform:translateY(0);
@@ -710,11 +734,13 @@
       padding-top:18px;
       width:100%;
     }
-    .main{width:100%;}
+    .main{width:100%;padding-top:116px;}
+    section{scroll-margin-top:92px;}
   }
 
   @media (max-width:700px){
-    .wrap{padding:42px 20px 100px;}
+    .wrap{padding:0 20px 100px;}
+    .sidebar{padding-inline:20px;}
     .hero{grid-template-columns:1fr;gap:34px;}
     .avatar{max-width:360px;}
     .name{font-size:38px;}
@@ -745,12 +771,12 @@
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
     .cursor{animation:none;}
-    .menu-toggle span,
+    .sidebar,
     .sidebar-panel{transition:none;}
   }
 </style>
 </head>
-<body>
+<body id="top">
 
 <canvas class="constellation-background" data-constellation aria-hidden="true"></canvas>
 
@@ -781,9 +807,18 @@
   <!-- SIDEBAR -->
   <aside class="sidebar" data-sidebar>
     <div class="sidebar-header">
-      <div class="brand">Jose Adrian Suriaga</div>
+      <a class="brand" href="#top" aria-label="Back to top">Jose Adrian Suriaga</a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar-panel" aria-label="Open navigation" data-menu-toggle>
-        <span></span><span></span><span></span>
+        <svg class="menu-icon menu-icon-burger" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 10.5C4.7 6.7 7.7 4 12 4s7.3 2.7 8 6.5H4Z"></path>
+          <path d="M3 13h18"></path>
+          <path d="m4 15.5 2.5 1.5 2.75-1.5L12 17l2.75-1.5L17.5 17l2.5-1.5"></path>
+          <path d="M4 19h16c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2Z"></path>
+          <path d="M9 7.5h.01M13 6.5h.01M16 8h.01"></path>
+        </svg>
+        <svg class="menu-icon menu-icon-close" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m6 6 12 12M18 6 6 18"></path>
+        </svg>
       </button>
     </div>
 
@@ -1248,9 +1283,16 @@
   const sidebar = document.querySelector('[data-sidebar]');
   const menuToggle = document.querySelector('[data-menu-toggle]');
   const sidebarPanel = document.querySelector('[data-sidebar-panel]');
+  const brandLink = document.querySelector('.brand');
+  const mobileNavigation = window.matchMedia('(max-width: 860px)');
+  let lastNavigationScroll = window.scrollY;
+  let navigationScrollFrame = null;
+
+  const showMobileNavigation = () => sidebar?.classList.remove('is-hidden');
 
   const setMenu = (open) => {
     if (!sidebar || !menuToggle || !sidebarPanel) return;
+    if (open) showMobileNavigation();
     sidebar.classList.toggle('is-open', open);
     menuToggle.setAttribute('aria-expanded', String(open));
     menuToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
@@ -1261,9 +1303,43 @@
   });
 
   navLinks.forEach((link) => link.addEventListener('click', () => setMenu(false)));
+  brandLink?.addEventListener('click', () => {
+    showMobileNavigation();
+    setMenu(false);
+  });
+
+  const updateMobileNavigation = () => {
+    const currentScroll = Math.max(window.scrollY, 0);
+    const scrollDifference = currentScroll - lastNavigationScroll;
+
+    if (!mobileNavigation.matches || sidebar?.classList.contains('is-open') || currentScroll <= 24) {
+      showMobileNavigation();
+    } else if (scrollDifference > 8 && currentScroll > 96) {
+      sidebar?.classList.add('is-hidden');
+    } else if (scrollDifference < -8) {
+      showMobileNavigation();
+    }
+
+    if (Math.abs(scrollDifference) > 8 || currentScroll <= 24) {
+      lastNavigationScroll = currentScroll;
+    }
+    navigationScrollFrame = null;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (navigationScrollFrame === null) {
+      navigationScrollFrame = window.requestAnimationFrame(updateMobileNavigation);
+    }
+  }, { passive: true });
+
+  sidebar?.addEventListener('focusin', showMobileNavigation);
 
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 860) setMenu(false);
+    if (!mobileNavigation.matches) {
+      setMenu(false);
+      showMobileNavigation();
+    }
+    lastNavigationScroll = window.scrollY;
   });
 
   document.addEventListener('keydown', (event) => {
