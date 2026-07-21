@@ -10,9 +10,11 @@ A responsive static portfolio built from Jose Adrian Suriaga's resume. It has no
 │   ├── index.html
 │   └── assets
 │       ├── documents
-│       │   └── jose-adrian-suriaga-resume.pdf
-│       └── images
-│           └── profile.jpg
+│       │   └── Resume_JoseAdrianSuriaga.pdf
+│       ├── images
+│       │   └── profile.jpg
+│       └── js
+│           └── constellation-background.js
 ├── vercel.json
 └── README.md
 ```
@@ -46,4 +48,4 @@ Every push to `main` should create a deployment. No environment variables are re
 
 - Page content, inline styles, and interactions: `public/index.html`
 - Profile picture and favicon: `public/assets/images/profile.jpg`
-- Downloadable resume: `public/assets/documents/jose-adrian-suriaga-resume.pdf`
+- Downloadable resume: `public/assets/documents/Resume_JoseAdrianSuriaga.pdf`

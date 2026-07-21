@@ -428,13 +428,37 @@
   .project-top{
     display:flex;
     justify-content:space-between;
-    align-items:baseline;
+    align-items:center;
     gap:12px;
+  }
+
+  .project-heading{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:9px 12px;
+    min-width:0;
   }
 
   .project-name{
     font-weight:700;
     font-size:16px;
+  }
+
+  .project-role{
+    display:inline-flex;
+    align-items:center;
+    min-height:24px;
+    padding:3px 9px;
+    border:1px solid rgba(227,169,74,.36);
+    border-radius:4px;
+    background:rgba(227,169,74,.14);
+    color:var(--accent);
+    font-size:10px;
+    font-weight:700;
+    line-height:1.35;
+    letter-spacing:.06em;
+    text-transform:uppercase;
   }
 
   .project-link{
@@ -848,7 +872,7 @@
       <h1 class="name">Jose Adrian Suriaga</h1>
       <div class="tagline" id="tagline"><span id="tagline-text"></span><span class="cursor"></span></div>
 
-      <a class="resume-button" href="assets/documents/jose-adrian-suriaga-resume.pdf" target="_blank" rel="noopener">View résumé <span aria-hidden="true">↗</span></a>
+      <a class="resume-button" href="assets/documents/Resume_JoseAdrianSuriaga.pdf" target="_blank" rel="noopener">View résumé <span aria-hidden="true">↗</span></a>
 
       <div class="summary">
         <p>I build web and mobile apps that work as good as they look — front to back. Clean code, real solutions, zero shortcuts. I don't just ship features, I ship results that help businesses grow.</p>
@@ -909,7 +933,10 @@
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">StrandShare</div>
+        <div class="project-heading">
+          <div class="project-name">StrandShare</div>
+          <span class="project-role">Full-Stack Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
       <div class="project-desc">
@@ -925,7 +952,10 @@
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">Angat Trading Retail &amp; POS System</div>
+        <div class="project-heading">
+          <div class="project-name">Angat Trading Retail &amp; POS System</div>
+          <span class="project-role">Full-Stack Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
       <div class="project-desc">Custom point-of-sale and retail management system built for a motorcycle equipment store, including a barter trading module for accurate and fair item-to-item exchanges.</div>
@@ -938,7 +968,10 @@
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">EECM Church Management System</div>
+        <div class="project-heading">
+          <div class="project-name">EECM Church Management System</div>
+          <span class="project-role">Full-Stack Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
       <div class="project-desc">Centralized administrative operations, data tracking, and internal communication between E-Elyon Church's main location and its multiple branches.</div>
@@ -959,20 +992,26 @@
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">FixItLocal</div>
+        <div class="project-heading">
+          <div class="project-name">FixItLocal</div>
+          <span class="project-role">Solo Full-Stack Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
-      <div class="project-desc">Infrastructure reporting website for eight local colleges, with photo uploads and precise interactive map pinning so officials can track and resolve maintenance hazards.</div>
+      <div class="project-desc">Specialized infrastructure reporting website built for a city in Bulacan, allowing users to report hazards such as broken streetlights, potholes, and blocked drains. AI analyzes and verifies uploaded hazard photos in real time, while precise map pinning helps officials locate and resolve issues efficiently.</div>
       <div class="tags">
-        <span class="tag">Full-Stack</span>
-        <span class="tag">Photo Uploads</span>
-        <span class="tag">Geolocation</span>
+        <span class="tag">AI Photo Verification</span>
+        <span class="tag">Hazard Reporting</span>
+        <span class="tag">Interactive Map Pinning</span>
       </div>
     </div>
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">FlavorFlow</div>
+        <div class="project-heading">
+          <div class="project-name">FlavorFlow</div>
+          <span class="project-role">Solo Full-Stack Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
       <div class="project-desc">Centralized culinary hub with community inspiration, personal recipe storage, a weekly planner, and a smart grocery list with real-time ingredient and shopping progress tracking.</div>
@@ -985,7 +1024,10 @@
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">P2P Bus Ticketing &amp; Reservation System</div>
+        <div class="project-heading">
+          <div class="project-name">P2P Bus Ticketing &amp; Reservation System</div>
+          <span class="project-role">Backend Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
       <div class="project-desc">Backend infrastructure for a real-time point-to-point bus transit platform, with immediate ticket ordering and seat reservation logic designed to prevent double-booking.</div>
@@ -998,7 +1040,10 @@
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">Tiny Diver</div>
+        <div class="project-heading">
+          <div class="project-name">Tiny Diver</div>
+          <span class="project-role">Lead Game Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
       <div class="project-desc">A 2D educational ocean-conservation adventure with original level design, asset integration, core mechanics, top-down gameplay, and complex tilemaps.</div>
@@ -1011,7 +1056,10 @@
 
     <div class="project">
       <div class="project-top">
-        <div class="project-name">Technical Mini-Projects</div>
+        <div class="project-heading">
+          <div class="project-name">Technical Mini-Projects</div>
+          <span class="project-role">Solo Developer</span>
+        </div>
         <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
       </div>
       <div class="project-desc">Practical applications including a point-of-sale system, inventory management tracker, and vending machine simulation, focused on backend architecture, database logic, and clean interfaces.</div>
@@ -1117,152 +1165,11 @@
   <span class="copy-status" role="status" aria-live="polite" data-copy-status></span>
 </dialog>
 
+<script src="assets/js/constellation-background.js"></script>
 <script>
   const tagline = 'Full-stack developer · Web · Mobile';
   const taglineText = document.getElementById('tagline-text');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const constellationCanvas = document.querySelector('[data-constellation]');
-  const constellationContext = constellationCanvas?.getContext('2d');
-
-  if (constellationCanvas && constellationContext) {
-    const linkDistance = 140;
-    const flashlightRadius = 220;
-    const pointer = { x: 0, y: 0, active: false };
-    let canvasWidth = 0;
-    let canvasHeight = 0;
-    let stars = [];
-    let constellationFrame = null;
-    let resizeTimer = null;
-
-    class ConstellationStar {
-      constructor() {
-        this.x = Math.random() * canvasWidth;
-        this.y = Math.random() * canvasHeight;
-        this.radius = Math.random() * 1.4 + .4;
-        this.velocityX = (Math.random() - .5) * .08;
-        this.velocityY = (Math.random() - .5) * .08;
-        this.baseAlpha = Math.random() * .5 + .25;
-        this.twinklePhase = Math.random() * Math.PI * 2;
-        this.twinkle = 0;
-      }
-
-      update(time) {
-        this.x += this.velocityX;
-        this.y += this.velocityY;
-        if (this.x < -10) this.x = canvasWidth + 10;
-        if (this.x > canvasWidth + 10) this.x = -10;
-        if (this.y < -10) this.y = canvasHeight + 10;
-        if (this.y > canvasHeight + 10) this.y = -10;
-        this.twinkle = Math.sin(time * .0008 + this.twinklePhase) * .15;
-      }
-    }
-
-    const distanceToPointer = (x, y) => Math.hypot(x - pointer.x, y - pointer.y);
-
-    const drawConstellation = (time = 0) => {
-      constellationContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
-      if (!reducedMotion) stars.forEach((star) => star.update(time));
-
-      for (let index = 0; index < stars.length; index += 1) {
-        for (let nextIndex = index + 1; nextIndex < stars.length; nextIndex += 1) {
-          const first = stars[index];
-          const second = stars[nextIndex];
-          const distance = Math.hypot(first.x - second.x, first.y - second.y);
-          if (distance >= linkDistance) continue;
-
-          const pointerDistance = pointer.active
-            ? distanceToPointer((first.x + second.x) / 2, (first.y + second.y) / 2)
-            : Number.POSITIVE_INFINITY;
-          const boost = pointerDistance < flashlightRadius
-            ? (1 - pointerDistance / flashlightRadius) * .5
-            : 0;
-          const opacity = Math.min((1 - distance / linkDistance) * .12 + boost, .65);
-
-          constellationContext.strokeStyle = boost > .05
-            ? `rgba(240, 168, 60, ${opacity})`
-            : `rgba(160, 170, 190, ${opacity})`;
-          constellationContext.lineWidth = .6;
-          constellationContext.beginPath();
-          constellationContext.moveTo(first.x, first.y);
-          constellationContext.lineTo(second.x, second.y);
-          constellationContext.stroke();
-        }
-      }
-
-      stars.forEach((star) => {
-        const pointerDistance = pointer.active
-          ? distanceToPointer(star.x, star.y)
-          : Number.POSITIVE_INFINITY;
-        const boost = pointerDistance < flashlightRadius
-          ? 1 - pointerDistance / flashlightRadius
-          : 0;
-        const alpha = Math.min(star.baseAlpha + star.twinkle + boost * .6, 1);
-
-        constellationContext.beginPath();
-        constellationContext.fillStyle = boost > .15
-          ? `rgba(240, 168, 60, ${alpha})`
-          : `rgba(220, 224, 235, ${alpha})`;
-        constellationContext.shadowColor = 'rgba(240, 168, 60, .9)';
-        constellationContext.shadowBlur = boost > .15 ? 8 * boost : 0;
-        constellationContext.arc(star.x, star.y, star.radius + boost * 1.6, 0, Math.PI * 2);
-        constellationContext.fill();
-        constellationContext.shadowBlur = 0;
-      });
-
-      if (pointer.active) {
-        const glow = constellationContext.createRadialGradient(
-          pointer.x, pointer.y, 0,
-          pointer.x, pointer.y, flashlightRadius * 1.4
-        );
-        glow.addColorStop(0, 'rgba(240, 168, 60, .05)');
-        glow.addColorStop(1, 'rgba(240, 168, 60, 0)');
-        constellationContext.fillStyle = glow;
-        constellationContext.fillRect(0, 0, canvasWidth, canvasHeight);
-      }
-
-      if (!reducedMotion && !document.hidden) {
-        constellationFrame = window.requestAnimationFrame(drawConstellation);
-      }
-    };
-
-    const resizeConstellation = () => {
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
-      const canvasBounds = constellationCanvas.getBoundingClientRect();
-      canvasWidth = Math.round(canvasBounds.width);
-      canvasHeight = Math.round(canvasBounds.height);
-      constellationCanvas.width = Math.round(canvasWidth * pixelRatio);
-      constellationCanvas.height = Math.round(canvasHeight * pixelRatio);
-      constellationContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-      const starCount = Math.max(34, Math.floor((canvasWidth * canvasHeight) / 9000));
-      stars = Array.from({ length: starCount }, () => new ConstellationStar());
-      if (reducedMotion) drawConstellation();
-    };
-
-    resizeConstellation();
-    if (!reducedMotion) constellationFrame = window.requestAnimationFrame(drawConstellation);
-
-    window.addEventListener('pointermove', (event) => {
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      pointer.active = true;
-    }, { passive: true });
-    document.documentElement.addEventListener('pointerleave', () => { pointer.active = false; });
-    window.addEventListener('blur', () => { pointer.active = false; });
-    window.addEventListener('resize', () => {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(resizeConstellation, 120);
-    });
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && constellationFrame !== null) {
-        window.cancelAnimationFrame(constellationFrame);
-        constellationFrame = null;
-      } else if (!document.hidden && !reducedMotion && constellationFrame === null) {
-        constellationFrame = window.requestAnimationFrame(drawConstellation);
-      }
-    });
-  }
 
   if (taglineText) {
     if (reducedMotion) {
