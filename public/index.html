@@ -461,6 +461,14 @@
     text-transform:uppercase;
   }
 
+  .project-links{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px 14px;
+    flex:none;
+  }
+
   .project-link{
     display:inline-flex;
     align-items:center;
@@ -996,7 +1004,10 @@
           <div class="project-name">FixItLocal</div>
           <span class="project-role">Solo Full-Stack Developer</span>
         </div>
-        <a class="project-link" href="https://github.com/JaesNOLIMIT" target="_blank" rel="noopener"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>github ↗</a>
+        <div class="project-links" aria-label="FixItLocal repositories">
+          <a class="project-link" href="https://github.com/JaesNOLIMIT/FIxItLocal_Web_v1.0" target="_blank" rel="noopener" aria-label="View the FixItLocal Web repository on GitHub"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>web ↗</a>
+          <a class="project-link" href="https://github.com/JaesNOLIMIT/FixItLocal_Mobile_v1.0" target="_blank" rel="noopener" aria-label="View the FixItLocal Mobile repository on GitHub"><svg class="link-icon" aria-hidden="true"><use href="#icon-github"></use></svg>mobile ↗</a>
+        </div>
       </div>
       <div class="project-desc">Specialized infrastructure reporting website built for a city in Bulacan, allowing users to report hazards such as broken streetlights, potholes, and blocked drains. AI analyzes and verifies uploaded hazard photos in real time, while precise map pinning helps officials locate and resolve issues efficiently.</div>
       <div class="tags">
