@@ -4,14 +4,15 @@
   if (!canvas || !context) return;
 
   const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const coarsePointerQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
   const LINK_DISTANCE = 140;
   const FLASHLIGHT_RADIUS = 220;
-  const ASTEROID_COUNT = 12;
   const MILKY_WAY_ANGLE = -0.36;
 
   let width = 0;
   let height = 0;
   let stars = [];
+  let constellations = [];
   let planets = [];
   let asteroids = [];
   let milkyWayDust = [];
@@ -19,11 +20,13 @@
   let nextShootingStarAt = performance.now() + 2000 + Math.random() * 4000;
   let animationFrame = null;
   let resizeTimer = null;
+  let ambientAngle = Math.random() * Math.PI * 2;
 
   const pointer = {
     x: 0,
     y: 0,
     active: false,
+    touching: false,
   };
 
   class Star {
@@ -48,8 +51,104 @@
       if (this.y > height + 10) this.y = -10;
 
       this.twinkle = Math.sin(time * 0.0008 + this.twinklePhase) * 0.15;
+
+      const constellation = constellations.find((item) => (
+        Math.hypot(this.x - item.centerX, this.y - item.centerY) < item.exclusionRadius
+      ));
+      if (constellation) {
+        const deltaX = this.x - constellation.centerX;
+        const deltaY = this.y - constellation.centerY;
+        const distance = Math.max(Math.hypot(deltaX, deltaY), 0.001);
+        const push = (constellation.exclusionRadius - distance) * 0.03;
+        this.x += deltaX / distance * push;
+        this.y += deltaY / distance * push;
+      }
     }
   }
+
+  const CONSTELLATION_DEFINITIONS = [
+    {
+      name: 'Ursa Major',
+      stars: [[0, 0], [5, 25], [35, 30], [40, 5], [70, 0], [100, 10], [130, -10]],
+      lines: [[0, 1], [1, 2], [2, 3], [3, 0], [3, 4], [4, 5], [5, 6]],
+    },
+    {
+      name: 'Orion',
+      stars: [[70, 0], [0, 10], [35, 55], [45, 60], [55, 65], [70, 120], [5, 115]],
+      lines: [[0, 1], [0, 4], [1, 2], [2, 3], [3, 4], [4, 5], [2, 6]],
+    },
+    {
+      name: 'Cassiopeia',
+      stars: [[0, 0], [30, 25], [60, 0], [90, 20], [120, 0]],
+      lines: [[0, 1], [1, 2], [2, 3], [3, 4]],
+    },
+    {
+      name: 'Leo',
+      stars: [[0, 50], [15, 20], [40, 0], [70, 10], [95, 25], [60, 55], [30, 70]],
+      lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 0]],
+    },
+    {
+      name: 'Cygnus',
+      stars: [[50, 0], [50, 40], [50, 90], [0, 45], [100, 45]],
+      lines: [[0, 1], [1, 2], [3, 1], [1, 4]],
+    },
+    {
+      name: 'Scorpius',
+      stars: [[0, 0], [15, 10], [30, 25], [40, 45], [35, 70], [20, 90], [5, 100]],
+      lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6]],
+    },
+    {
+      name: 'Taurus',
+      stars: [[0, 60], [25, 30], [50, 0], [75, 30], [100, 60], [110, 5], [-10, 5]],
+      lines: [[0, 1], [1, 2], [2, 3], [3, 4], [2, 5], [0, 6]],
+    },
+  ];
+
+  const buildConstellations = () => {
+    const compact = width < 700;
+    const anchors = [
+      [0.72, 0.13, 1.25, -0.1],
+      [0.76, 0.68, 1.0, 0.12],
+      [0.06, 0.1, 1.1, 0.05],
+      [0.08, 0.84, 0.95, -0.08],
+      [0.88, 0.36, 0.88, 0],
+      [0.5, 0.84, 0.88, 0.15],
+      [0.43, 0.06, 0.95, -0.05],
+    ];
+
+    return CONSTELLATION_DEFINITIONS.map((definition, index) => {
+      const [anchorX, anchorY, originalScale, rotation] = anchors[index];
+      const scale = originalScale * (compact ? 0.62 : 1);
+      const cosine = Math.cos(rotation);
+      const sine = Math.sin(rotation);
+      const points = definition.stars.map(([localX, localY]) => {
+        const scaledX = localX * scale;
+        const scaledY = localY * scale;
+        return {
+          x: anchorX * width + scaledX * cosine - scaledY * sine,
+          y: anchorY * height + scaledX * sine + scaledY * cosine,
+          radius: Math.random() * 0.6 + 1.3,
+          twinklePhase: Math.random() * Math.PI * 2,
+        };
+      });
+      const centerX = points.reduce((sum, point) => sum + point.x, 0) / points.length;
+      const centerY = points.reduce((sum, point) => sum + point.y, 0) / points.length;
+      const exclusionRadius = Math.max(...points.map((point) => (
+        Math.hypot(point.x - centerX, point.y - centerY)
+      ))) + (compact ? 28 : 50);
+
+      return {
+        name: definition.name,
+        lines: definition.lines,
+        points,
+        centerX,
+        centerY,
+        labelX: centerX,
+        labelY: Math.min(...points.map((point) => point.y)) - 14,
+        exclusionRadius,
+      };
+    });
+  };
 
   const PLANET_DEFINITIONS = [
     { name: 'Sun', radius: 26, type: 'sun' },
@@ -147,7 +246,19 @@
   }
 
   class ShootingStar {
-    constructor() {
+    constructor(origin) {
+      if (origin) {
+        this.x = origin.x;
+        this.y = origin.y;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4.5 + 6.5;
+        this.velocityX = Math.cos(angle) * speed;
+        this.velocityY = Math.sin(angle) * speed;
+        this.length = Math.random() * 70 + 70;
+        this.life = 1;
+        this.decay = Math.random() * 0.008 + 0.01;
+        return;
+      }
       const startsAtTop = Math.random() < 0.65;
       this.x = startsAtTop ? Math.random() * width * 0.8 : -20;
       this.y = startsAtTop ? -20 : Math.random() * height * 0.5;
@@ -168,7 +279,11 @@
     }
 
     get finished() {
-      return this.life <= 0 || this.x > width + 80 || this.y > height + 80;
+      return this.life <= 0
+        || this.x < -100
+        || this.x > width + 100
+        || this.y < -100
+        || this.y > height + 100;
     }
   }
 
@@ -197,7 +312,8 @@
 
   const buildMilkyWayDust = () => {
     const diagonal = Math.hypot(width, height);
-    return Array.from({ length: 260 }, () => {
+    const dustCount = coarsePointerQuery.matches ? 130 : 260;
+    return Array.from({ length: dustCount }, () => {
       const spread = (Math.random() + Math.random() + Math.random()) / 3;
       return {
         localX: (Math.random() - 0.5) * diagonal * 1.4,
@@ -209,6 +325,67 @@
   };
 
   const distanceToPointer = (x, y) => Math.hypot(x - pointer.x, y - pointer.y);
+
+  const buildStarGrid = () => {
+    const grid = new Map();
+    stars.forEach((star, index) => {
+      const column = Math.floor(star.x / LINK_DISTANCE);
+      const row = Math.floor(star.y / LINK_DISTANCE);
+      const key = `${column},${row}`;
+      if (!grid.has(key)) grid.set(key, []);
+      grid.get(key).push(index);
+    });
+    return grid;
+  };
+
+  const drawConstellations = (time, flashlightActive) => {
+    const labelRange = coarsePointerQuery.matches ? 115 : 150;
+
+    constellations.forEach((constellation) => {
+      constellation.lines.forEach(([firstIndex, secondIndex]) => {
+        const first = constellation.points[firstIndex];
+        const second = constellation.points[secondIndex];
+        const distance = flashlightActive
+          ? distanceToPointer((first.x + second.x) / 2, (first.y + second.y) / 2)
+          : Number.POSITIVE_INFINITY;
+        const boost = distance < FLASHLIGHT_RADIUS ? 1 - distance / FLASHLIGHT_RADIUS : 0;
+        const opacity = Math.min(0.18 + boost * 0.5, 0.75);
+        context.strokeStyle = boost > 0.05
+          ? `rgba(240, 168, 60, ${opacity})`
+          : `rgba(180, 190, 210, ${Math.min(opacity, 0.35)})`;
+        context.lineWidth = 0.8;
+        context.beginPath();
+        context.moveTo(first.x, first.y);
+        context.lineTo(second.x, second.y);
+        context.stroke();
+      });
+
+      constellation.points.forEach((point) => {
+        const distance = flashlightActive
+          ? distanceToPointer(point.x, point.y)
+          : Number.POSITIVE_INFINITY;
+        const boost = distance < FLASHLIGHT_RADIUS ? 1 - distance / FLASHLIGHT_RADIUS : 0;
+        const twinkle = Math.sin(time * 0.0008 + point.twinklePhase) * 0.15;
+        const alpha = Math.min(0.7 + twinkle + boost * 0.3, 1);
+        context.beginPath();
+        context.fillStyle = boost > 0.15
+          ? `rgba(240, 168, 60, ${alpha})`
+          : `rgba(235, 238, 248, ${alpha})`;
+        context.arc(point.x, point.y, point.radius + boost, 0, Math.PI * 2);
+        context.fill();
+      });
+
+      const labelDistance = flashlightActive
+        ? distanceToPointer(constellation.centerX, constellation.centerY)
+        : Number.POSITIVE_INFINITY;
+      if (labelDistance < labelRange) {
+        context.font = `${coarsePointerQuery.matches ? 9 : 11}px "JetBrains Mono", monospace`;
+        context.textAlign = 'center';
+        context.fillStyle = `rgba(240, 168, 60, ${(1 - labelDistance / labelRange) * 0.9})`;
+        context.fillText(constellation.name.toUpperCase(), constellation.labelX, constellation.labelY);
+      }
+    });
+  };
 
   const drawMilkyWay = () => {
     const diagonal = Math.hypot(width, height);
@@ -455,10 +632,66 @@
     context.shadowBlur = 0;
   };
 
+  const drawEarthSatellite = (time, earth, flashlightActive) => {
+    const orbitAngle = time * 0.00018;
+    const orbitTilt = -0.3;
+    const orbitRadiusX = earth.radius * 2.3;
+    const orbitRadiusY = earth.radius * 1.1;
+    const cosine = Math.cos(orbitTilt);
+    const sine = Math.sin(orbitTilt);
+
+    const positionAt = (angle) => {
+      const localX = Math.cos(angle) * orbitRadiusX;
+      const localY = Math.sin(angle) * orbitRadiusY;
+      return {
+        x: earth.x + localX * cosine - localY * sine,
+        y: earth.y + localX * sine + localY * cosine,
+      };
+    };
+
+    const position = positionAt(orbitAngle);
+    const ahead = positionAt(orbitAngle + 0.02);
+    const travelAngle = Math.atan2(ahead.y - position.y, ahead.x - position.x);
+    const distance = flashlightActive
+      ? distanceToPointer(position.x, position.y)
+      : Number.POSITIVE_INFINITY;
+    const boost = distance < FLASHLIGHT_RADIUS ? 1 - distance / FLASHLIGHT_RADIUS : 0;
+    const alpha = Math.min(0.75 + boost * 0.25, 1);
+    const bodyWidth = earth.radius * 0.26;
+    const bodyHeight = earth.radius * 0.2;
+    const panelWidth = earth.radius * 0.42;
+    const panelHeight = earth.radius * 0.14;
+
+    context.save();
+    context.translate(position.x, position.y);
+    context.rotate(travelAngle);
+    context.fillStyle = `rgba(150, 170, 205, ${alpha * 0.9})`;
+    context.fillRect(-bodyWidth / 2 - panelWidth, -panelHeight / 2, panelWidth, panelHeight);
+    context.fillRect(bodyWidth / 2, -panelHeight / 2, panelWidth, panelHeight);
+    context.fillStyle = `rgba(225, 225, 232, ${alpha})`;
+    context.fillRect(-bodyWidth / 2, -bodyHeight / 2, bodyWidth, bodyHeight);
+
+    if (Math.sin(time * 0.006) > 0.88) {
+      context.beginPath();
+      context.fillStyle = 'rgba(255, 130, 95, 0.95)';
+      context.arc(bodyWidth / 2, 0, 0.8, 0, Math.PI * 2);
+      context.fill();
+    }
+    context.restore();
+  };
+
   const render = (time = 0) => {
     const shouldAnimate = !reduceMotionQuery.matches;
+    if (coarsePointerQuery.matches && !pointer.touching) {
+      ambientAngle += 0.0009;
+      pointer.x = width / 2 + Math.cos(ambientAngle) * width * 0.32;
+      pointer.y = height / 2 + Math.sin(ambientAngle * 1.4) * height * 0.28;
+    }
+    const flashlightActive = pointer.active || coarsePointerQuery.matches;
+
     context.clearRect(0, 0, width, height);
     drawMilkyWay();
+    drawConstellations(time, flashlightActive);
 
     if (shouldAnimate) {
       stars.forEach((star) => star.update(time));
@@ -467,7 +700,7 @@
     }
 
     planets.forEach((planet) => {
-      const pointerDistance = pointer.active
+      const pointerDistance = flashlightActive
         ? distanceToPointer(planet.x, planet.y)
         : Number.POSITIVE_INFINITY;
       const labelRange = planet.radius + 70;
@@ -486,34 +719,48 @@
       }
     });
 
+    const starGrid = buildStarGrid();
+    const linkDistanceSquared = LINK_DISTANCE * LINK_DISTANCE;
     for (let index = 0; index < stars.length; index += 1) {
-      for (let nextIndex = index + 1; nextIndex < stars.length; nextIndex += 1) {
-        const first = stars[index];
-        const second = stars[nextIndex];
-        const distance = Math.hypot(first.x - second.x, first.y - second.y);
-        if (distance >= LINK_DISTANCE) continue;
+      const first = stars[index];
+      const column = Math.floor(first.x / LINK_DISTANCE);
+      const row = Math.floor(first.y / LINK_DISTANCE);
+      for (let columnOffset = -1; columnOffset <= 1; columnOffset += 1) {
+        for (let rowOffset = -1; rowOffset <= 1; rowOffset += 1) {
+          const bucket = starGrid.get(`${column + columnOffset},${row + rowOffset}`);
+          if (!bucket) continue;
+          for (const nextIndex of bucket) {
+            if (nextIndex <= index) continue;
+            const second = stars[nextIndex];
+            const deltaX = first.x - second.x;
+            const deltaY = first.y - second.y;
+            const distanceSquared = deltaX * deltaX + deltaY * deltaY;
+            if (distanceSquared >= linkDistanceSquared) continue;
+            const distance = Math.sqrt(distanceSquared);
 
-        const pointerDistance = pointer.active
-          ? distanceToPointer((first.x + second.x) / 2, (first.y + second.y) / 2)
-          : Number.POSITIVE_INFINITY;
-        const boost = pointerDistance < FLASHLIGHT_RADIUS
-          ? (1 - pointerDistance / FLASHLIGHT_RADIUS) * 0.5
-          : 0;
-        const opacity = Math.min((1 - distance / LINK_DISTANCE) * 0.12 + boost, 0.65);
+            const pointerDistance = flashlightActive
+              ? distanceToPointer((first.x + second.x) / 2, (first.y + second.y) / 2)
+              : Number.POSITIVE_INFINITY;
+            const boost = pointerDistance < FLASHLIGHT_RADIUS
+              ? (1 - pointerDistance / FLASHLIGHT_RADIUS) * 0.5
+              : 0;
+            const opacity = Math.min((1 - distance / LINK_DISTANCE) * 0.12 + boost, 0.65);
 
-        context.strokeStyle = boost > 0.05
-          ? `rgba(240, 168, 60, ${opacity})`
-          : `rgba(160, 170, 190, ${opacity})`;
-        context.lineWidth = 0.6;
-        context.beginPath();
-        context.moveTo(first.x, first.y);
-        context.lineTo(second.x, second.y);
-        context.stroke();
+            context.strokeStyle = boost > 0.05
+              ? `rgba(240, 168, 60, ${opacity})`
+              : `rgba(160, 170, 190, ${opacity})`;
+            context.lineWidth = 0.6;
+            context.beginPath();
+            context.moveTo(first.x, first.y);
+            context.lineTo(second.x, second.y);
+            context.stroke();
+          }
+        }
       }
     }
 
     stars.forEach((star) => {
-      const pointerDistance = pointer.active
+      const pointerDistance = flashlightActive
         ? distanceToPointer(star.x, star.y)
         : Number.POSITIVE_INFINITY;
       const boost = pointerDistance < FLASHLIGHT_RADIUS
@@ -534,7 +781,7 @@
     });
 
     asteroids.forEach((asteroid) => {
-      const pointerDistance = pointer.active
+      const pointerDistance = flashlightActive
         ? distanceToPointer(asteroid.x, asteroid.y)
         : Number.POSITIVE_INFINITY;
       const boost = pointerDistance < FLASHLIGHT_RADIUS
@@ -552,7 +799,10 @@
     shootingStars = shootingStars.filter((shootingStar) => !shootingStar.finished);
     shootingStars.forEach(drawShootingStar);
 
-    if (pointer.active) {
+    const earth = planets.find((planet) => planet.name === 'Earth');
+    if (earth) drawEarthSatellite(time, earth, flashlightActive);
+
+    if (flashlightActive) {
       const glow = context.createRadialGradient(
         pointer.x,
         pointer.y,
@@ -583,10 +833,13 @@
     canvas.height = Math.round(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
-    const starCount = Math.max(34, Math.floor(width * height / 9000));
+    const starDensity = coarsePointerQuery.matches ? 15000 : 9000;
+    const starCount = Math.max(coarsePointerQuery.matches ? 24 : 34, Math.floor(width * height / starDensity));
+    const asteroidCount = coarsePointerQuery.matches ? 6 : 12;
+    constellations = buildConstellations();
     stars = Array.from({ length: starCount }, () => new Star());
     planets = scatterPlanets();
-    asteroids = Array.from({ length: ASTEROID_COUNT }, () => new Asteroid());
+    asteroids = Array.from({ length: asteroidCount }, () => new Asteroid());
     milkyWayDust = buildMilkyWayDust();
     shootingStars = [];
 
@@ -613,6 +866,30 @@
     pointer.active = true;
     if (reduceMotionQuery.matches) render(performance.now());
   }, { passive: true });
+
+  window.addEventListener('pointerdown', (event) => {
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+    pointer.active = true;
+    pointer.touching = event.pointerType === 'touch';
+  }, { passive: true });
+
+  window.addEventListener('pointerup', (event) => {
+    if (event.pointerType === 'touch') {
+      pointer.touching = false;
+      pointer.active = false;
+    }
+  }, { passive: true });
+
+  window.addEventListener('pointercancel', () => {
+    pointer.touching = false;
+    pointer.active = false;
+  }, { passive: true });
+
+  window.addEventListener('click', (event) => {
+    if (reduceMotionQuery.matches || event.target.closest('a, button, dialog')) return;
+    shootingStars.push(new ShootingStar({ x: event.clientX, y: event.clientY }));
+  });
 
   document.documentElement.addEventListener('pointerleave', () => {
     pointer.active = false;
